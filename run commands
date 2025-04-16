@@ -1,0 +1,5 @@
+cd .\backend\
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+.\venv\Scripts\activate
+
+flask --app app --debug run --reload
