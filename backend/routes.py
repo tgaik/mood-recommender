@@ -20,10 +20,13 @@ def create_book():
         #Convert requests to json
         data = request.json
 
+        # Make sure all required fields are provided
         required_fields = ["name", "genre", "desc"]
         for field in required_fields:
             if field not in data:
                 return jsonify({"error":f'Missing required field: {field}'}), 400
+        #---------------------#
+        
 
         id = data.get("id")
         name = data.get("name")
@@ -46,3 +49,20 @@ def create_book():
 
 
 
+# DELETE A BOOK
+@app.route("/api/books/<int:id>", methods = ["DELETE"])
+def delete_book(id):
+    try:
+        book = Book.query.get(id)
+        if book is None:
+            return jsonify({"error":"Book not found"}), 404 
+        else:
+            print(f"DELETE request for book ID: {id}")
+        
+        db.session.delete(book)
+        db.session.commit()
+        return jsonify({"msg":"Book deleted"}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error":str(e)}), 500
